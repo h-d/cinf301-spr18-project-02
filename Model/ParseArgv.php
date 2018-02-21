@@ -27,16 +27,23 @@ class ParseArgv
             //checks if arg is a single (i.e. -f)
             if (preg_match($single_check, $args[$i])) {
 
-                //is arg the final arg?
+               //is arg the final arg?
                if ($i + 1 >= count($args)) {
                     $this->flagsParsed[] = $args[$i];
+
+
                 //is the arg followed by an arg beginning with "-"?
                 } else if (preg_match("/^-/", $args[$i + 1])) {
                     $this->flagsParsed[] = $args[$i];
+
+
+
                 //if not, create add a single to the singlesParsed array using the breakup_single function
                 } else {
                     $this->breakup_single($args, $i, $args[$i + 1]);
                 }
+
+
             //check if arg matches double_check
             } else if (preg_match($double_check, $args[$i]))
             {
@@ -87,5 +94,54 @@ class ParseArgv
 
         return $parsedArgs;
     }
+
+
+    //print the mega-array
+    public function print_Parsed($parsedArgs)
+    {
+        foreach ($parsedArgs as $category=>$type) {
+            print("\n$category\n");
+
+            //if category is flags, only print the flag values
+            if ($category == 'FLAGS') {
+                foreach ($type as $name => $value) {
+                    //replace dashes with '' and print
+                    $tempval = preg_replace('/\-/', "", $value);
+                    print("'$tempval'\n");
+                }
+
+            //if the category is not flags, print the name and the args belonging to the name
+            } else {
+
+
+                foreach ($type as $name => $arg) {
+
+                    $integer = 0;
+                    $tempname = preg_replace('/\-/', "", $name);
+
+                    print("'$tempname' => ");
+
+                    $fullstring = " ";
+
+
+                    //create temp string with all values
+                    foreach ($arg as $item => $value) {
+                        $fullstring = $fullstring . "[$item] '$value', ";
+                        $integer = $item + 1;
+                    }
+
+                    //remove final comma and print
+                    $partstring = substr($fullstring, 0, -2);
+                    print($partstring);
+
+                    //print # of args
+                    if ($integer > 1) {
+                        print(" ($integer arguments)\n");
+                    } else print(" ($integer argument)\n");
+                }
+            }
+        }
+    }
+
 
 }
