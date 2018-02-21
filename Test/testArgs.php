@@ -7,10 +7,37 @@ $parsedArgs = $parsed->getParsed();
 
 foreach ($parsedArgs as $category=>$type)
 {
-    print("Category: $category\n");
+    print("\n$category\n");
 
-    foreach ($type as $name=>$values)
+    if($category == 'FLAGS')
     {
-        print("Name: $name   Weight: $values\n");
+        foreach ($type as $name => $value)
+        {
+            $tempval = preg_replace('/\-/',"",$value);
+            print("'$tempval'\n");
+        }
+    } else {
+
+        foreach ($type as $name => $arg) {
+
+            $integer = 0;
+            $tempname = preg_replace('/\-/', "", $name);
+
+            print("'$tempname' => ");
+
+            $fullstring = " ";
+
+            foreach ($arg as $item => $value) {
+                $fullstring = $fullstring . "[$item] '$value', ";
+                $integer = $item + 1;
+            }
+
+            $partstring = substr($fullstring, 0, -2);
+            print($partstring);
+
+            if ($integer > 1) {
+                print(" ($integer arguments)\n");
+            } else print(" ($integer argument)\n");
+        }
     }
 }

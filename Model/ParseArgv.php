@@ -34,21 +34,37 @@ class ParseArgv
                 } else if (preg_match("/^-/", $args[$i + 1])) {
                     $this->flagsParsed[] = $args[$i];
                 } else {
-                    $this->breakup_string($args, $i, $args[$i + 1]);
+                    $this->breakup_single($args, $i, $args[$i + 1]);
                 }
             } else if (preg_match($double_check, $args[$i]))
             {
-                $this->doublesParsed[$args[$i]] = 'DOUBLEE';
+                $this->breakup_double($args[$i]);
             }
         }
 
     }
 
-    private function breakup_string($args, $i, $string)
+    private function breakup_single($args, $i, $string)
     {
-        $this->singlesParsed[$args[$i]] = $string;
+        $vals = explode(',', $string);
+
+        for($n = 0; $n < count($vals);$n++)
+        {
+            $this->singlesParsed[$args[$i]][] = $vals[$n];
+        }
     }
 
+    private function breakup_double($string)
+    {
+        list($name, $value) = explode('=', $string);
+
+        $vals = explode(',', $value);
+
+        for($n = 0; $n < count($vals);$n++)
+        {
+            $this->doublesParsed[$name][] = $vals[$n];
+        }
+    }
 
     //return flag array
     public function getParsed()
