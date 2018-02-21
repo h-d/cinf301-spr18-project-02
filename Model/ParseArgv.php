@@ -18,8 +18,8 @@ class ParseArgv
     private function parse($args)
     {
         //string for checking -(char)
-        $single_check = "/^-[0-9a-fA-F]$/";
-
+        $single_check = "/^-[0-9a-zA-Z]$/";
+        $double_check = "/^--(.*?)\=(.*?)/";
 
         //loop through arg array
         for ($i = 0; $i < count($args); $i++) {
@@ -28,15 +28,17 @@ class ParseArgv
             if (preg_match($single_check, $args[$i])) {
 
                 //is arg the final arg?
-                if ($i + 1 >= count($args)) {
+               if ($i + 1 >= count($args)) {
                     $this->flagsParsed[] = $args[$i];
-
                 //is the arg followed by an arg beginning with "-"?
                 } else if (preg_match("/^-/", $args[$i + 1])) {
                     $this->flagsParsed[] = $args[$i];
                 } else {
                     $this->breakup_string($args, $i, $args[$i + 1]);
                 }
+            } else if (preg_match($double_check, $args[$i]))
+            {
+                $this->doublesParsed[$args[$i]] = 'DOUBLEE';
             }
         }
 
