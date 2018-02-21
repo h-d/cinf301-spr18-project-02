@@ -2,10 +2,15 @@
 require_once "../Model/ParseArgv.php";
 
 $parsed = new ParseArgv($_SERVER['argv']);
-$arguments = $parsed->getParsed();
-// To get $arguments, you should use:
-//      $arguments = $parsed->argv;
+$parsedArgs = $parsed->getParsed();
 
-foreach ($arguments as $k => $v) {
-    print("$k=>$v\n");
+
+foreach ($parsedArgs as $category=>$type)
+{
+    print("Category: $category\n");
+
+    foreach ($type as $name=>$values)
+    {
+        print("Name: $name   Weight: $values\n");
+    }
 }
